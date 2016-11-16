@@ -35,8 +35,8 @@ class SpatialPyramidPooling(Layer):
             num_rows = input_shape[1]
             num_cols = input_shape[2]
 
-        row_length = [num_rows // i for i in self.pool_list]
-        col_length = [num_cols // i for i in self.pool_list]
+        row_length = [K.cast(num_rows, 'float') / i for i in self.pool_list]
+        col_length = [K.cast(num_cols, 'float') / i for i in self.pool_list]
 
         outputs = []
 
@@ -45,11 +45,17 @@ class SpatialPyramidPooling(Layer):
                 for ix in range(num_pool_regions):
                     for jy in range(num_pool_regions):
                         x1 = ix * row_length[pool_num]
-                        x2 = x1 + row_length[pool_num]
+                        x2 = ix * row_length[pool_num] + row_length[pool_num]
                         y1 = jy * col_length[pool_num]
-                        y2 = y1 + col_length[pool_num]
+                        y2 = jy * col_length[pool_num] + col_length[pool_num]
+
+                        x1 = K.cast(K.round(x1), 'int32')
+                        x2 = K.cast(K.round(x2), 'int32')
+                        y1 = K.cast(K.round(y1), 'int32')
+                        y2 = K.cast(K.round(y2), 'int32')
+
                         new_shape = [input_shape[0], input_shape[1],
-                                     row_length[pool_num], col_length[pool_num]]
+                                     x2 - x1, y2 - y1]
                         x_crop = x[:, :, x1:x2, y1:y2]
                         xm = K.reshape(x_crop, new_shape)
                         pooled_val = K.max(xm, axis=(2, 3))
@@ -60,11 +66,17 @@ class SpatialPyramidPooling(Layer):
                 for ix in range(num_pool_regions):
                     for jy in range(num_pool_regions):
                         x1 = ix * row_length[pool_num]
-                        x2 = x1 + row_length[pool_num]
+                        x2 = ix * row_length[pool_num] + row_length[pool_num]
                         y1 = jy * col_length[pool_num]
-                        y2 = y1 + col_length[pool_num]
-                        new_shape = [input_shape[0], row_length[pool_num],
-                                     col_length[pool_num], input_shape[3]]
+                        y2 = jy * col_length[pool_num] + col_length[pool_num]
+
+                        x1 = K.cast(K.round(x1), 'int32')
+                        x2 = K.cast(K.round(x2), 'int32')
+                        y1 = K.cast(K.round(y1), 'int32')
+                        y2 = K.cast(K.round(y2), 'int32')
+
+                        new_shape = [input_shape[0], x2 - x1,
+                                     y2 - y1, input_shape[3]]
                         x_crop = x[:, x1:x2, y1:y2, :]
                         xm = K.reshape(x_crop, new_shape)
                         pooled_val = K.max(xm, axis=(1, 2))
