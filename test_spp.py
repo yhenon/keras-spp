@@ -49,9 +49,9 @@ for img_size in [5, 8, 15]:
                             m_val = np.max(X[batch_num, cn, x1:x2, y1:y2])
                         elif dim_ordering == 'tf':
                             m_val = np.max(X[batch_num, x1:x2, y1:y2, cn])
+                            
                         np.testing.assert_almost_equal(
                             m_val, Y[batch_num, idx], decimal=6)
-                        #print(m_val,Y[batch_num, idx])
                         idx += 1
 
 print('Spatial pyramid pooling test passed')
