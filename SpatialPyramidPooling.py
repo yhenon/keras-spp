@@ -52,8 +52,8 @@ class SpatialPyramidPooling(Layer):
             num_rows = input_shape[1]
             num_cols = input_shape[2]
 
-        row_length = [K.cast(num_rows, 'float') / i for i in self.pool_list]
-        col_length = [K.cast(num_cols, 'float') / i for i in self.pool_list]
+        row_length = [K.cast(num_rows, 'float32') / i for i in self.pool_list]
+        col_length = [K.cast(num_cols, 'float32') / i for i in self.pool_list]
 
         outputs = []
 
