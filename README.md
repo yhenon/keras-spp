@@ -1,6 +1,8 @@
 # keras-spp
 Spatial pyramid pooling layers for keras,base on https://arxiv.org/abs/1406.4729 
 
+![spp](http://i.imgur.com/SQWJVoD.png)
+(Image credit:Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition, K. He, X. Zhang, S. Ren, J. Sun)
 Two types of pooling layers are currently available:
 
 - SpatialPyramidPooling: apply the pooling procedure on the entire image, given an image batch. This is especially useful if the image input
