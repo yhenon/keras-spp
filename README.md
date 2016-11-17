@@ -4,6 +4,8 @@ Spatial pyramid pooling layers for keras, based on https://arxiv.org/abs/1406.47
 ![spp](http://i.imgur.com/SQWJVoD.png)
 
 (Image credit: Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition, K. He, X. Zhang, S. Ren, J. Sun)
+
+
 Two types of pooling layers are currently available:
 
 - SpatialPyramidPooling: apply the pooling procedure on the entire image, given an image batch. This is especially useful if the image input
@@ -21,7 +23,7 @@ num_classes = 10
 
 model = Sequential()
 
-# uses theano ordering
+# uses theano ordering. Note that we leave the image size as None to allow multiple image sizes
 model.add(Convolution2D(32, 3, 3, border_mode='same', input_shape=(3, None, None)))
 model.add(Activation('relu'))
 model.add(Convolution2D(32, 3, 3))
@@ -38,8 +40,9 @@ model.add(Activation('softmax'))
 
 model.compile(loss='categorical_crossentropy', optimizer='sgd')
 
+# train on 64x64x3 images
 model.fit(np.random.rand(batch_size, num_channels, 64, 64), np.random.rand(batch_size, num_classes))
-
+# train on 32x32x3 images
 model.fit(np.random.rand(batch_size, num_channels, 32, 32), np.random.rand(batch_size, num_classes))
 ```
 
