@@ -34,7 +34,7 @@ for img_size in [5, 8, 15]:
         col_length = [float(X.shape[2]) / i for i in pooling_regions]
 
     Y = model.predict(X)
-
+    
     for batch_num in range(batch_size):
         idx = 0
         for pool_num, num_pool_regions in enumerate(pooling_regions):
@@ -49,7 +49,7 @@ for img_size in [5, 8, 15]:
                             m_val = np.max(X[batch_num, cn, x1:x2, y1:y2])
                         elif dim_ordering == 'tf':
                             m_val = np.max(X[batch_num, x1:x2, y1:y2, cn])
-                            
+
                         np.testing.assert_almost_equal(
                             m_val, Y[batch_num, idx], decimal=6)
                         idx += 1

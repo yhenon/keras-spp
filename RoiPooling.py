@@ -34,7 +34,6 @@ class RoiPooling(Layer):
         input_shape = K.shape(img)
         rois_shape = K.shape(rois)
 
-        all_outputs = []
         outputs = []
 
         for roi_idx in range(self.num_rois):
@@ -89,7 +88,7 @@ class RoiPooling(Layer):
                             pooled_val = K.max(xm, axis=(1, 2))
                             outputs.append(pooled_val)
 
-        all_outputs = K.concatenate(outputs,axis = 0)
-        all_outputs = K.reshape(all_outputs,(1,self.num_rois,self.nb_channels * self.num_outputs_per_channel))
+        final_output = K.concatenate(outputs,axis = 0)
+        final_output = K.reshape(final_output,(1,self.num_rois,self.nb_channels * self.num_outputs_per_channel))
 
-        return all_outputs
+        return final_output
