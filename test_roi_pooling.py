@@ -8,9 +8,9 @@ import pdb
 dim_ordering = K.image_dim_ordering()
 assert dim_ordering in {'tf', 'th'}, 'dim_ordering must be in {tf, th}'
 
-pooling_regions = [1, 2]
+pooling_regions = [1, 2, 4]
 num_rois = 2
-num_channels = 1
+num_channels = 3
 
 if dim_ordering == 'tf':
     in_img = Input(shape=(None, None, num_channels))
@@ -26,7 +26,7 @@ model.summary()
 
 model.compile(loss='mse', optimizer='sgd')
 
-for img_size in [4, 8, 17]:
+for img_size in [8, 16, 37]:
 
     if dim_ordering == 'th':
         X_img = np.random.rand(1, num_channels, img_size, img_size)
