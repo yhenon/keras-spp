@@ -40,9 +40,9 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='sgd')
 
 # train on 64x64x3 images
-model.fit(np.random.rand(batch_size, num_channels, 64, 64), np.zeros(batch_size, num_classes))
+model.fit(np.random.rand(batch_size, num_channels, 64, 64), np.zeros((batch_size, num_classes)))
 # train on 32x32x3 images
-model.fit(np.random.rand(batch_size, num_channels, 32, 32), np.zeros(batch_size, num_classes))
+model.fit(np.random.rand(batch_size, num_channels, 32, 32), np.zeros((batch_size, num_classes)))
 ```
 
 - RoiPooling: extract multiple rois from a single image.
