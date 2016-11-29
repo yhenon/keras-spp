@@ -2,7 +2,27 @@ from keras.engine.topology import Layer
 import keras.backend as K
 
 class RoiPooling(Layer):
-
+    '''ROI pooling layer for 2D inputs.
+    See Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition,
+    K. He, X. Zhang, S. Ren, J. Sun
+    # Arguments
+        pool_list: list of int
+            List of pooling regions to use. The length of the list is the number of pooling regions,
+            each int in the list is the number of regions in that pool. For example [1,2,4] would be 3
+            regions with 1, 2x2 and 4x4 max pools, so 21 outputs per feature map
+        num_rois: number of regions of interest to be used
+    # Input shape
+        list of two 4D tensors [X_img,X_roi] with shape:
+        X_img:
+        `(1, channels, rows, cols)` if dim_ordering='th'
+        or 4D tensor with shape:
+        `(1, rows, cols, channels)` if dim_ordering='tf'.
+        X_roi:
+        `(1,num_rois,4)` list of rois, with ordering (x,y,w,h)
+    # Output shape
+        3D tensor with shape:
+        `(1, num_rois, channels * sum([i * i for i in pool_list])`
+    '''
     def __init__(self, pool_list, num_rois, **kwargs):
 
         self.dim_ordering = K.image_dim_ordering()
@@ -32,7 +52,6 @@ class RoiPooling(Layer):
         rois = x[1]
 
         input_shape = K.shape(img)
-        rois_shape = K.shape(rois)
 
         outputs = []
 
