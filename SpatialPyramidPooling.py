@@ -18,7 +18,7 @@ class SpatialPyramidPooling(Layer):
         `(samples, rows, cols, channels)` if dim_ordering='tf'.
     # Output shape
         2D tensor with shape:
-        `(samples, nb_filter * sum([i * i for i in pool_list])`
+        `(samples, channels * sum([i * i for i in pool_list])`
     '''
 
     def __init__(self, pool_list, **kwargs):
