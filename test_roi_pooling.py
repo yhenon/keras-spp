@@ -42,6 +42,13 @@ for img_size in [8, 16, 37]:
 
     X_roi = np.reshape(X_roi, (1, num_rois, 4))
 
+    X_img2 = np.concatenate([X_img,X_img],axis=0)
+    X_roi2 = np.concatenate([X_roi,X_roi],axis=0)
+    Y = model.predict([X_img2,X_roi2])
+    print(np.sum(Y[0,:,:]))
+    print(np.sum(Y[1,:,:]))
+
+    pdb.set_trace()
     Y = model.predict([X_img, X_roi])
 
     for roi in range(num_rois):
@@ -76,3 +83,4 @@ for img_size in [8, 16, 37]:
                         np.testing.assert_almost_equal(
                             m_val, Y[0, roi, idx], decimal=6)
                         idx += 1
+print('Passed roi pooling test')
