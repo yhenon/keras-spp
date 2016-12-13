@@ -41,6 +41,11 @@ class SpatialPyramidPooling(Layer):
     def get_output_shape_for(self, input_shape):
         return (input_shape[0], self.nb_channels * self.num_outputs_per_channel)
 
+    def get_config(self):
+        config = {'pool_list': self.pool_list}
+        base_config = super(SpatialPyramidPooling, self).get_config()
+        return dict(list(base_config.items()) + list(config.items()))
+
     def call(self, x, mask=None):
 
         input_shape = K.shape(x)
@@ -82,10 +87,10 @@ class SpatialPyramidPooling(Layer):
             for pool_num, num_pool_regions in enumerate(self.pool_list):
                 for ix in range(num_pool_regions):
                     for jy in range(num_pool_regions):
-                        x1 = ix * row_length[pool_num]
-                        x2 = ix * row_length[pool_num] + row_length[pool_num]
-                        y1 = jy * col_length[pool_num]
-                        y2 = jy * col_length[pool_num] + col_length[pool_num]
+                        x1 = ix * col_length[pool_num]
+                        x2 = ix * col_length[pool_num] + col_length[pool_num]
+                        y1 = jy * row_length[pool_num]
+                        y2 = jy * row_length[pool_num] + row_length[pool_num]
 
                         x1 = K.cast(K.round(x1), 'int32')
                         x2 = K.cast(K.round(x2), 'int32')
