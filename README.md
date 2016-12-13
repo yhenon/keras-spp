@@ -9,7 +9,9 @@ Spatial pyramid pooling layers for keras, based on https://arxiv.org/abs/1406.47
 Two types of pooling layers are currently available:
 
 - SpatialPyramidPooling: apply the pooling procedure on the entire image, given an image batch. This is especially useful if the image input
-can have varying dimensions, but needs to be fed to a fully connected layer. For example, this works:
+can have varying dimensions, but needs to be fed to a fully connected layer. 
+
+For example, this trains a network on images of both 32x32 and 64x64 size:
 
 ```
 import numpy as np
@@ -45,4 +47,38 @@ model.fit(np.random.rand(batch_size, num_channels, 64, 64), np.zeros((batch_size
 model.fit(np.random.rand(batch_size, num_channels, 32, 32), np.zeros((batch_size, num_classes)))
 ```
 
-- RoiPooling: extract multiple rois from a single image.
+- RoiPooling: extract multiple rois from a single image. In roi pooling, the spatial pyramid pooling is applied at the specified subregions of the image. This is useful for object detection, and is used in fast-RCNN and faster-RCNN. Note that the batch_size is limited to 1 currently.
+
+```
+pooling_regions = [1, 2, 4]
+num_rois = 2
+num_channels = 3
+
+if dim_ordering == 'tf':
+    in_img = Input(shape=(None, None, num_channels))
+elif dim_ordering == 'th':
+    in_img = Input(shape=(num_channels, None, None))
+
+in_roi = Input(shape=(num_rois, 4))
+
+out_roi_pool = RoiPooling(pooling_regions, num_rois)([in_img, in_roi])
+
+model = Model([in_img, in_roi], out_roi_pool)
+
+if dim_ordering == 'th':
+    X_img = np.random.rand(1, num_channels, img_size, img_size)
+    row_length = [float(X_img.shape[2]) / i for i in pooling_regions]
+    col_length = [float(X_img.shape[3]) / i for i in pooling_regions]
+elif dim_ordering == 'tf':
+    X_img = np.random.rand(1, img_size, img_size, num_channels)
+    row_length = [float(X_img.shape[1]) / i for i in pooling_regions]
+    col_length = [float(X_img.shape[2]) / i for i in pooling_regions]
+
+X_roi = np.array([[0, 0, img_size / 1, img_size / 1],
+                  [0, 0, img_size / 2, img_size / 2]])
+
+X_roi = np.reshape(X_roi, (1, num_rois, 4))
+
+Y = model.predict([X_img, X_roi])
+
+```
