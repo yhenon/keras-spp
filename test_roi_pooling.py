@@ -42,25 +42,16 @@ for img_size in [8, 16, 37]:
 
     X_roi = np.reshape(X_roi, (1, num_rois, 4))
 
-    X_img2 = np.concatenate([X_img,X_img],axis=0)
-    X_roi2 = np.concatenate([X_roi,X_roi],axis=0)
-    Y = model.predict([X_img2,X_roi2])
-    print(np.sum(Y[0,:,:]))
-    print(np.sum(Y[1,:,:]))
-
-    pdb.set_trace()
     Y = model.predict([X_img, X_roi])
 
     for roi in range(num_rois):
 
         if dim_ordering == 'th':
-            X_curr = X_img[0, :, X_roi[0, roi, 0]:X_roi[
-                0, roi, 2], X_roi[0, roi, 1]:X_roi[0, roi, 3]]
+            X_curr = X_img[0, :, X_roi[0, roi, 0]:X_roi[0, roi, 2], X_roi[0, roi, 1]:X_roi[0, roi, 3]]
             row_length = [float(X_curr.shape[1]) / i for i in pooling_regions]
             col_length = [float(X_curr.shape[2]) / i for i in pooling_regions]
         elif dim_ordering == 'tf':
-            X_curr = X_img[0, X_roi[0, roi, 0]:X_roi[0, roi, 2],
-                           X_roi[0, roi, 1]:X_roi[0, roi, 3], :]
+            X_curr = X_img[0, X_roi[0, roi, 0]:X_roi[0, roi, 2], X_roi[0, roi, 1]:X_roi[0, roi, 3], :]
             row_length = [float(X_curr.shape[0]) / i for i in pooling_regions]
             col_length = [float(X_curr.shape[1]) / i for i in pooling_regions]
 
@@ -71,14 +62,14 @@ for img_size in [8, 16, 37]:
                 for jy in range(num_pool_regions):
                     for cn in range(num_channels):
 
-                        x1 = int(round(ix * row_length[pool_num]))
-                        x2 = int(round(ix * row_length[pool_num] + row_length[pool_num]))
-                        y1 = int(round(jy * col_length[pool_num]))
-                        y2 = int(round(jy * col_length[pool_num] + col_length[pool_num]))
+                        x1 = int(round(ix * col_length[pool_num]))
+                        x2 = int(round(ix * col_length[pool_num] + col_length[pool_num]))
+                        y1 = int(round(jy * row_length[pool_num]))
+                        y2 = int(round(jy * row_length[pool_num] + row_length[pool_num]))
                         if dim_ordering == 'th':
-                            m_val = np.max(X_curr[cn, x1:x2, y1:y2])
+                            m_val = np.max(X_curr[cn, y1:y2, x1:x2])
                         elif dim_ordering == 'tf':
-                            m_val = np.max(X_curr[x1:x2, y1:y2, cn])
+                            m_val = np.max(X_curr[y1:y2, x1:x2, cn])
 
                         np.testing.assert_almost_equal(
                             m_val, Y[0, roi, idx], decimal=6)

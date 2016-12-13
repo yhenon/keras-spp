@@ -34,6 +34,7 @@ for img_size in [5, 8, 15]:
         col_length = [float(X.shape[2]) / i for i in pooling_regions]
 
     Y = model.predict(X)
+    print(X.shape)
     
     for batch_num in range(batch_size):
         idx = 0
@@ -41,14 +42,14 @@ for img_size in [5, 8, 15]:
             for ix in range(num_pool_regions):
                 for jy in range(num_pool_regions):
                     for cn in range(num_channels):
-                        x1 = int(round(ix * row_length[pool_num]))
-                        x2 = int(round(ix * row_length[pool_num] + row_length[pool_num]))
-                        y1 = int(round(jy * col_length[pool_num]))
-                        y2 = int(round(jy * col_length[pool_num] + col_length[pool_num]))
+                        x1 = int(round(ix * col_length[pool_num]))
+                        x2 = int(round(ix * col_length[pool_num] + col_length[pool_num]))
+                        y1 = int(round(jy * row_length[pool_num]))
+                        y2 = int(round(jy * row_length[pool_num] + row_length[pool_num]))
                         if dim_ordering == 'th':
-                            m_val = np.max(X[batch_num, cn, x1:x2, y1:y2])
+                            m_val = np.max(X[batch_num, cn, y1:y2, x1:x2])
                         elif dim_ordering == 'tf':
-                            m_val = np.max(X[batch_num, x1:x2, y1:y2, cn])
+                            m_val = np.max(X[batch_num, y1:y2, x1:x2, cn])
 
                         np.testing.assert_almost_equal(
                             m_val, Y[batch_num, idx], decimal=6)
