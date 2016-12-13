@@ -33,6 +33,8 @@ for img_size in [5, 8, 15]:
         row_length = [float(X.shape[1]) / i for i in pooling_regions]
         col_length = [float(X.shape[2]) / i for i in pooling_regions]
 
+
+
     Y = model.predict(X)
     print(X.shape)
     

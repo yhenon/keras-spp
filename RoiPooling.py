@@ -44,6 +44,12 @@ class RoiPooling(Layer):
     def get_output_shape_for(self, input_shape):
         return (None, self.num_rois, self.nb_channels * self.num_outputs_per_channel)
 
+    def get_config(self):
+        config = {'pool_list': self.pool_list,'num_rois':self.num_rois}
+        base_config = super(RoiPooling, self).get_config()
+        return dict(list(base_config.items()) + list(config.items()))
+
+
     def call(self, x, mask=None):
 
         assert(len(x) == 2)
