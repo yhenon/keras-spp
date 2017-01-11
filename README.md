@@ -6,7 +6,7 @@ Spatial pyramid pooling layers for keras, based on https://arxiv.org/abs/1406.47
 (Image credit: Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition, K. He, X. Zhang, S. Ren, J. Sun)
 
 
-Two types of pooling layers are currently available:
+Three types of pooling layers are currently available:
 
 - SpatialPyramidPooling: apply the pooling procedure on the entire image, given an image batch. This is especially useful if the image input
 can have varying dimensions, but needs to be fed to a fully connected layer. 
@@ -82,3 +82,5 @@ X_roi = np.reshape(X_roi, (1, num_rois, 4))
 Y = model.predict([X_img, X_roi])
 
 ```
+
+- RoiPoolingConv: like RoiPooling, but maintains spatial information.
