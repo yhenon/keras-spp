@@ -64,8 +64,8 @@ class SpatialPyramidPooling(Layer):
 
         if self.dim_ordering == 'th':
             for pool_num, num_pool_regions in enumerate(self.pool_list):
-                for ix in range(num_pool_regions):
-                    for jy in range(num_pool_regions):
+                for jy in range(num_pool_regions):
+                    for ix in range(num_pool_regions):
                         x1 = ix * col_length[pool_num]
                         x2 = ix * col_length[pool_num] + col_length[pool_num]
                         y1 = jy * row_length[pool_num]
@@ -85,8 +85,8 @@ class SpatialPyramidPooling(Layer):
 
         elif self.dim_ordering == 'tf':
             for pool_num, num_pool_regions in enumerate(self.pool_list):
-                for ix in range(num_pool_regions):
-                    for jy in range(num_pool_regions):
+                for jy in range(num_pool_regions):
+                    for ix in range(num_pool_regions):
                         x1 = ix * col_length[pool_num]
                         x2 = ix * col_length[pool_num] + col_length[pool_num]
                         y1 = jy * row_length[pool_num]
@@ -104,5 +104,12 @@ class SpatialPyramidPooling(Layer):
                         pooled_val = K.max(xm, axis=(1, 2))
                         outputs.append(pooled_val)
 
-        outputs = K.concatenate(outputs)
+        if self.dim_ordering == 'th':
+            outputs = K.concatenate(outputs)
+        elif self.dim_ordering == 'tf':
+            outputs = K.concatenate(outputs,axis = 0)
+            outputs = K.reshape(outputs,(self.num_outputs_per_channel,input_shape[0], self.nb_channels))
+            outputs = K.permute_dimensions(outputs,(1,0,2))
+            outputs = K.reshape(outputs,(input_shape[0], self.num_outputs_per_channel * self.nb_channels))
+
         return outputs
