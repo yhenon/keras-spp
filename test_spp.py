@@ -6,10 +6,10 @@ import keras.backend as K
 dim_ordering = K.image_dim_ordering()
 assert dim_ordering in {'tf', 'th'}, 'dim_ordering must be in {tf, th}'
 
-pooling_regions = [1, 2, 4]
+pooling_regions = [1,2,4]
 
 num_channels = 12
-batch_size = 2
+batch_size = 16
 
 if dim_ordering == 'th':
     input_shape = (num_channels, None, None)
@@ -22,14 +22,14 @@ model.summary()
 
 model.compile(loss='mse', optimizer='sgd')
 
-for img_size in [4, 8, 15]:
+for img_size in [8,16]:
 
     if dim_ordering == 'th':
-        X = np.random.rand(batch_size, num_channels, img_size, img_size)
+        X = np.random.rand(batch_size, num_channels, img_size, img_size*2)
         row_length = [float(X.shape[2]) / i for i in pooling_regions]
         col_length = [float(X.shape[3]) / i for i in pooling_regions]
     elif dim_ordering == 'tf':
-        X = np.random.rand(batch_size, img_size, img_size, num_channels)
+        X = np.random.rand(batch_size, img_size, img_size*2, num_channels)
         row_length = [float(X.shape[1]) / i for i in pooling_regions]
         col_length = [float(X.shape[2]) / i for i in pooling_regions]
 
@@ -52,7 +52,7 @@ for img_size in [4, 8, 15]:
                             m_val = np.max(X[batch_num, y1:y2, x1:x2, cn])
 
                         np.testing.assert_almost_equal(
-                            m_val, Y[batch_num, idx], decimal=6)
+                           m_val, Y[batch_num, idx], decimal=6)
                         idx += 1
 
 print('Spatial pyramid pooling test passed')

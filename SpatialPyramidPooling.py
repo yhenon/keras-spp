@@ -75,7 +75,6 @@ class SpatialPyramidPooling(Layer):
                         x2 = K.cast(K.round(x2), 'int32')
                         y1 = K.cast(K.round(y1), 'int32')
                         y2 = K.cast(K.round(y2), 'int32')
-
                         new_shape = [input_shape[0], input_shape[1],
                                      y2 - y1, x2 - x1]
                         x_crop = x[:, :, y1:y2, x1:x2]
@@ -99,6 +98,7 @@ class SpatialPyramidPooling(Layer):
 
                         new_shape = [input_shape[0], y2 - y1,
                                      x2 - x1, input_shape[3]]
+
                         x_crop = x[:, y1:y2, x1:x2, :]
                         xm = K.reshape(x_crop, new_shape)
                         pooled_val = K.max(xm, axis=(1, 2))
@@ -107,9 +107,10 @@ class SpatialPyramidPooling(Layer):
         if self.dim_ordering == 'th':
             outputs = K.concatenate(outputs)
         elif self.dim_ordering == 'tf':
-            outputs = K.concatenate(outputs,axis = 0)
-            outputs = K.reshape(outputs,(self.num_outputs_per_channel,input_shape[0], self.nb_channels))
-            outputs = K.permute_dimensions(outputs,(1,0,2))
-            outputs = K.reshape(outputs,(input_shape[0], self.num_outputs_per_channel * self.nb_channels))
+            #outputs = K.concatenate(outputs,axis = 1)
+            outputs = K.concatenate(outputs)
+            #outputs = K.reshape(outputs,(len(self.pool_list),self.num_outputs_per_channel,input_shape[0],input_shape[1]))
+            #outputs = K.permute_dimensions(outputs,(3,1,0,2))
+            #outputs = K.reshape(outputs,(input_shape[0], self.num_outputs_per_channel * self.nb_channels))
 
         return outputs

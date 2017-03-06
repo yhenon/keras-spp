@@ -25,7 +25,7 @@ model.summary()
 
 model.compile(loss='mse', optimizer='sgd')
 
-for img_size in [8, 16, 37]:
+for img_size in [8, 16, 32]:
 
     if dim_ordering == 'th':
         X_img = np.random.rand(1, num_channels, img_size, img_size)
@@ -65,6 +65,7 @@ for img_size in [8, 16, 37]:
                         x2 = int(round(ix * col_length[pool_num] + col_length[pool_num]))
                         y1 = int(round(jy * row_length[pool_num]))
                         y2 = int(round(jy * row_length[pool_num] + row_length[pool_num]))
+
                         if dim_ordering == 'th':
                             m_val = np.max(X_curr[cn, y1:y2, x1:x2])
                         elif dim_ordering == 'tf':
@@ -73,4 +74,5 @@ for img_size in [8, 16, 37]:
                         np.testing.assert_almost_equal(
                             m_val, Y[0, roi, idx], decimal=6)
                         idx += 1
+                        
 print('Passed roi pooling test')
