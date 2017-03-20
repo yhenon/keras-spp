@@ -37,7 +37,7 @@ class RoiPoolingConv(Layer):
         elif self.dim_ordering == 'tf':
             self.nb_channels = input_shape[0][3]
 
-    def get_output_shape_for(self, input_shape):
+    def compute_output_shape(self, input_shape):
         if self.dim_ordering == 'th':
             return None, self.num_rois, self.nb_channels, self.pool_size, self.pool_size
         else:
@@ -54,6 +54,7 @@ class RoiPoolingConv(Layer):
 
         outputs = []
 
+        
         for roi_idx in range(self.num_rois):
 
             x = rois[0, roi_idx, 0]

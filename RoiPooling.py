@@ -41,7 +41,7 @@ class RoiPooling(Layer):
         elif self.dim_ordering == 'tf':
             self.nb_channels = input_shape[0][3]
 
-    def get_output_shape_for(self, input_shape):
+    def compute_output_shape(self, input_shape):
         return (None, self.num_rois, self.nb_channels * self.num_outputs_per_channel)
 
     def get_config(self):
