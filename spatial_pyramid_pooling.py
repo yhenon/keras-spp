@@ -1,5 +1,5 @@
-from keras.engine.topology import Layer
 import keras.backend as K
+from keras.engine.topology import Layer
 
 
 class SpatialPyramidPooling(Layer):
@@ -107,10 +107,10 @@ class SpatialPyramidPooling(Layer):
         if self.dim_ordering == 'th':
             outputs = K.concatenate(outputs)
         elif self.dim_ordering == 'tf':
-            #outputs = K.concatenate(outputs,axis = 1)
+            # outputs = K.concatenate(outputs,axis = 1)
             outputs = K.concatenate(outputs)
-            #outputs = K.reshape(outputs,(len(self.pool_list),self.num_outputs_per_channel,input_shape[0],input_shape[1]))
-            #outputs = K.permute_dimensions(outputs,(3,1,0,2))
-            #outputs = K.reshape(outputs,(input_shape[0], self.num_outputs_per_channel * self.nb_channels))
+            # outputs = K.reshape(outputs,(len(self.pool_list),self.num_outputs_per_channel,input_shape[0],input_shape[1]))
+            # outputs = K.permute_dimensions(outputs,(3,1,0,2))
+            # outputs = K.reshape(outputs,(input_shape[0], self.num_outputs_per_channel * self.nb_channels))
 
         return outputs
