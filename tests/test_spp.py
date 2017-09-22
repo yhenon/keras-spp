@@ -1,7 +1,8 @@
+import keras.backend as K
 import numpy as np
 from keras.models import Sequential
-from SpatialPyramidPooling import SpatialPyramidPooling
-import keras.backend as K
+
+from spp.SpatialPyramidPooling import SpatialPyramidPooling
 
 dim_ordering = K.image_dim_ordering()
 assert dim_ordering in {'tf', 'th'}, 'dim_ordering must be in {tf, th}'

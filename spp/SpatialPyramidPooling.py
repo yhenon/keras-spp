@@ -3,7 +3,7 @@ import keras.backend as K
 
 
 class SpatialPyramidPooling(Layer):
-    '''Spatial pyramid pooling layer for 2D inputs.
+    """Spatial pyramid pooling layer for 2D inputs.
     See Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition,
     K. He, X. Zhang, S. Ren, J. Sun
     # Arguments
@@ -19,7 +19,7 @@ class SpatialPyramidPooling(Layer):
     # Output shape
         2D tensor with shape:
         `(samples, channels * sum([i * i for i in pool_list])`
-    '''
+    """
 
     def __init__(self, pool_list, **kwargs):
 
