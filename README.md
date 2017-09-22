@@ -17,7 +17,7 @@ For example, this trains a network on images of both 32x32 and 64x64 size:
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Convolution2D, Activation, MaxPooling2D, Dense
-from SpatialPyramidPooling import SpatialPyramidPooling
+from spp.SpatialPyramidPooling import SpatialPyramidPooling
 
 batch_size = 64
 num_channels = 3
@@ -84,3 +84,5 @@ Y = model.predict([X_img, X_roi])
 ```
 
 - RoiPoolingConv: like RoiPooling, but maintains spatial information.
+
+- Thank you to @jlhbaseball15 for his contribution
