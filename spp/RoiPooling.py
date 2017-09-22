@@ -1,8 +1,9 @@
 from keras.engine.topology import Layer
 import keras.backend as K
 
+
 class RoiPooling(Layer):
-    '''ROI pooling layer for 2D inputs.
+    """ROI pooling layer for 2D inputs.
     See Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition,
     K. He, X. Zhang, S. Ren, J. Sun
     # Arguments
@@ -22,7 +23,8 @@ class RoiPooling(Layer):
     # Output shape
         3D tensor with shape:
         `(1, num_rois, channels * sum([i * i for i in pool_list])`
-    '''
+    """
+
     def __init__(self, pool_list, num_rois, **kwargs):
 
         self.dim_ordering = K.image_dim_ordering()
@@ -42,17 +44,16 @@ class RoiPooling(Layer):
             self.nb_channels = input_shape[0][3]
 
     def compute_output_shape(self, input_shape):
-        return (None, self.num_rois, self.nb_channels * self.num_outputs_per_channel)
+        return None, self.num_rois, self.nb_channels * self.num_outputs_per_channel
 
     def get_config(self):
-        config = {'pool_list': self.pool_list,'num_rois':self.num_rois}
+        config = {'pool_list': self.pool_list, 'num_rois': self.num_rois}
         base_config = super(RoiPooling, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
 
-
     def call(self, x, mask=None):
 
-        assert(len(x) == 2)
+        assert (len(x) == 2)
 
         img = x[0]
         rois = x[1]
@@ -63,10 +64,10 @@ class RoiPooling(Layer):
 
         for roi_idx in range(self.num_rois):
 
-            x = rois[0,roi_idx,0]
-            y = rois[0,roi_idx,1]
-            w = rois[0,roi_idx,2]
-            h = rois[0,roi_idx,3]
+            x = rois[0, roi_idx, 0]
+            y = rois[0, roi_idx, 1]
+            w = rois[0, roi_idx, 2]
+            h = rois[0, roi_idx, 3]
 
             row_length = [w / i for i in self.pool_list]
             col_length = [h / i for i in self.pool_list]
@@ -84,7 +85,7 @@ class RoiPooling(Layer):
                             x2 = K.cast(K.round(x2), 'int32')
                             y1 = K.cast(K.round(y1), 'int32')
                             y2 = K.cast(K.round(y2), 'int32')
-                            
+
                             new_shape = [input_shape[0], input_shape[1],
                                          y2 - y1, x2 - x1]
                             x_crop = img[:, :, y1:y2, x1:x2]
@@ -113,7 +114,7 @@ class RoiPooling(Layer):
                             pooled_val = K.max(xm, axis=(1, 2))
                             outputs.append(pooled_val)
 
-        final_output = K.concatenate(outputs,axis = 0)
-        final_output = K.reshape(final_output,(1,self.num_rois,self.nb_channels * self.num_outputs_per_channel))
+        final_output = K.concatenate(outputs, axis=0)
+        final_output = K.reshape(final_output, (1, self.num_rois, self.nb_channels * self.num_outputs_per_channel))
 
         return final_output

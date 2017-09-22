@@ -1,8 +1,9 @@
 from keras.engine.topology import Layer
 import keras.backend as K
 
+
 class RoiPoolingConv(Layer):
-    '''ROI pooling layer for 2D inputs.
+    """ROI pooling layer for 2D inputs.
     See Spatial Pyramid Pooling in Deep Convolutional Networks for Visual Recognition,
     K. He, X. Zhang, S. Ren, J. Sun
     # Arguments
@@ -20,7 +21,8 @@ class RoiPoolingConv(Layer):
     # Output shape
         3D tensor with shape:
         `(1, num_rois, channels, pool_size, pool_size)`
-    '''
+    """
+
     def __init__(self, pool_size, num_rois, **kwargs):
 
         self.dim_ordering = K.image_dim_ordering()
@@ -45,7 +47,7 @@ class RoiPoolingConv(Layer):
 
     def call(self, x, mask=None):
 
-        assert(len(x) == 2)
+        assert (len(x) == 2)
 
         img = x[0]
         rois = x[1]
@@ -54,14 +56,13 @@ class RoiPoolingConv(Layer):
 
         outputs = []
 
-        
         for roi_idx in range(self.num_rois):
 
             x = rois[0, roi_idx, 0]
             y = rois[0, roi_idx, 1]
             w = rois[0, roi_idx, 2]
             h = rois[0, roi_idx, 3]
-            
+
             row_length = w / float(self.pool_size)
             col_length = h / float(self.pool_size)
 
@@ -80,12 +81,12 @@ class RoiPoolingConv(Layer):
                         y1 = K.cast(y1, 'int32')
                         y2 = K.cast(y2, 'int32')
 
-                        dx = K.maximum(1,x2-x1)
+                        dx = K.maximum(1, x2 - x1)
                         x2 = x1 + dx
 
-                        dy = K.maximum(1,y2-y1)
+                        dy = K.maximum(1, y2 - y1)
                         y2 = y1 + dy
-                        
+
                         new_shape = [input_shape[0], input_shape[1],
                                      y2 - y1, x2 - x1]
 
@@ -114,8 +115,8 @@ class RoiPoolingConv(Layer):
                         pooled_val = K.max(xm, axis=(1, 2))
                         outputs.append(pooled_val)
 
-        final_output = K.concatenate(outputs,axis=0)
-        final_output = K.reshape(final_output,(1,self.num_rois, self.pool_size, self.pool_size, self.nb_channels))
+        final_output = K.concatenate(outputs, axis=0)
+        final_output = K.reshape(final_output, (1, self.num_rois, self.pool_size, self.pool_size, self.nb_channels))
 
         if self.dim_ordering == 'th':
             final_output = K.permute_dimensions(final_output, (0, 1, 4, 2, 3))

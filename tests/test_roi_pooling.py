@@ -1,8 +1,9 @@
+import keras.backend as K
 import numpy as np
 from keras.layers import Input
 from keras.models import Model
-from RoiPooling import RoiPooling
-import keras.backend as K
+
+from spp.RoiPooling import RoiPooling
 
 dim_ordering = K.image_dim_ordering()
 assert dim_ordering in {'tf', 'th'}, 'dim_ordering must be in {tf, th}'
